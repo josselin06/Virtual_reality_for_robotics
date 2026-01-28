@@ -48,11 +48,5 @@ with a multirotor UAV and a ground vehicle UGV running simultaneously in the sam
 
 
 
-\## Notes
-
-\- This repository is source-only (build outputs and large Unreal assets are excluded).
-
-\- Coordinate convention is NED: Z is positive down, so flying upward requires a negative Z target.
-
 
 
