@@ -1,0 +1,111 @@
+{
+  "SettingsVersion": 2.0,
+  "SimMode": "Both",
+  "ClockType": "ScalableClock",
+  "ClockSpeed": 1,
+  "EnableRpc": true,
+  "LocalHostIp": "127.0.0.1",
+  "ApiServerPort": 41451,
+
+  "Vehicles": {
+    "Drone1": {
+      "VehicleType": "SimpleFlight",
+      "PawnPath": "DefaultQuadrotor",
+      "AutoCreate": true,
+      "X": 0.0,
+      "Y": 0.0,
+      "Z": -1,
+      "AllowAPIAlways": true,
+
+      "Cameras": {
+        "0": {
+          "X": 0.2,
+          "Y": 0.0,
+          "Z": 0.0,
+          "Pitch": 0,
+          "Roll": 0,
+          "Yaw": 0,
+          "CaptureSettings": [
+            { "ImageType": 0, "Width": 640, "Height": 480, "FOV_Degrees": 90 },
+            { "ImageType": 3, "Width": 640, "Height": 480, "FOV_Degrees": 90 }
+          ]
+        }
+      },
+
+      "Sensors": {
+        "imu": { "SensorType": 2, "Enabled": true },
+        "gps": { "SensorType": 3, "Enabled": true },
+        "lidar": {
+          "SensorType": 6,
+          "Enabled": true,
+          "NumberOfChannels": 16,
+          "PointsPerSecond": 5000,
+          "RotationsPerSecond": 10,
+          "Range": 50,
+          "HorizontalFOVStart": -90,
+          "HorizontalFOVEnd": 90,
+          "VerticalFOVUpper": 10,
+          "VerticalFOVLower": -10,
+          "X": 0.2,
+          "Y": 0.0,
+          "Z": 0.5,
+          "Pitch": 0,
+          "Roll": 0,
+          "Yaw": 0,
+          "DrawDebugPoints": false
+        },
+        "barometer": { "SensorType": 1, "Enabled": true },
+        "magnetometer": { "SensorType": 4, "Enabled": true }
+      }
+    },
+
+    "Rover1": {
+      "VehicleType": "PhysXCar",
+      "PawnPath": "BoxCar",
+      "AutoCreate": true,
+      "X": 0,
+      "Y": 2,
+      "Z": 0,
+      "AllowAPIAlways": true,
+
+      "Cameras": {
+        "0": {
+          "X": 0.35,
+          "Y": 0.0,
+          "Z": 0,
+          "Pitch": 0,
+          "Roll": 0,
+          "Yaw": 0,
+          "CaptureSettings": [
+            { "ImageType": 0, "Width": 640, "Height": 480, "FOV_Degrees": 90 },
+            { "ImageType": 3, "Width": 640, "Height": 480, "FOV_Degrees": 90 }
+          ]
+        }
+      },
+
+      "Sensors": {
+        "imu": { "SensorType": 2, "Enabled": true },
+        "gps": { "SensorType": 3, "Enabled": true },
+        "lidar": {
+          "SensorType": 6,
+          "Enabled": true,
+          "NumberOfChannels": 16,
+          "PointsPerSecond": 1000,
+          "RotationsPerSecond": 10,
+          "Range": 50,
+          "HorizontalFOVStart": -180,
+          "HorizontalFOVEnd": 180,
+          "VerticalFOVUpper": 10,
+          "VerticalFOVLower": -10,
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 1.0,
+          "Pitch": 0,
+          "Roll": 0,
+          "Yaw": 0,
+          "DrawDebugPoints": false
+        }
+      }
+    }
+  }
+}
