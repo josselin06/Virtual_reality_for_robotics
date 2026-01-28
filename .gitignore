@@ -1,0 +1,28 @@
+# Unreal generated
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Visual Studio / build artifacts
+.vs/
+*.sln
+*.vcxproj*
+*.pdb
+*.obj
+*.ilk
+*.exp
+*.lib
+
+# Unreal assets (keep repo source-only)
+Content/
+*.uasset
+*.umap
+
+# OS / Python
+Thumbs.db
+.DS_Store
+__pycache__/
+*.pyc
+*.log

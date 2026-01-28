@@ -1,0 +1,75 @@
+#include "CarPawnApi.h"
+#include "AirBlueprintLib.h"
+
+#include "ChaosVehicleManager.h"
+
+CarPawnApi::CarPawnApi(ACarPawn* pawn, const msr::airlib::Kinematics::State* pawn_kinematics,
+                       msr::airlib::CarApiBase* vehicle_api)
+    : pawn_(pawn), pawn_kinematics_(pawn_kinematics), vehicle_api_(vehicle_api)
+{
+    movement_ = CastChecked<UChaosWheeledVehicleMovementComponent>(pawn->GetVehicleMovement());
+}
+
+void CarPawnApi::updateMovement(const msr::airlib::CarApiBase::CarControls& controls)
+{
+    last_controls_ = controls;
+
+    if (!controls.is_manual_gear && movement_->GetTargetGear() < 0)
+        movement_->SetTargetGear(0, true); //in auto gear we must have gear >= 0
+    if (controls.is_manual_gear && movement_->GetTargetGear() != controls.manual_gear)
+        movement_->SetTargetGear(controls.manual_gear, controls.gear_immediate);
+
+    movement_->SetThrottleInput(controls.throttle);
+    movement_->SetSteeringInput(controls.steering);
+    movement_->SetBrakeInput(controls.brake);
+    movement_->SetHandbrakeInput(controls.handbrake);
+    movement_->SetUseAutomaticGears(!controls.is_manual_gear);
+}
+
+msr::airlib::CarApiBase::CarState CarPawnApi::getCarState() const
+{
+    msr::airlib::CarApiBase::CarState state(
+        movement_->GetForwardSpeed() / 100, 
+        movement_->GetCurrentGear(),
+        movement_->GetEngineRotationSpeed(),
+        movement_->GetEngineMaxRotationSpeed(),
+        last_controls_.handbrake,
+        *pawn_kinematics_,
+        vehicle_api_->clock()->nowNanos());
+    return state;
+}
+
+void CarPawnApi::resetUnrealPhysicsOnly()
+{
+    last_controls_ = msr::airlib::CarApiBase::CarControls();
+
+    auto phys_comps = UAirBlueprintLib::getPhysicsComponents(pawn_);
+    UAirBlueprintLib::RunCommandOnGameThread([this, &phys_comps]() {
+        for (auto* phys_comp : phys_comps) {
+            phys_comp->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+            phys_comp->SetPhysicsLinearVelocity(FVector::ZeroVector);
+        }
+        movement_->ResetMoveState();
+        movement_->SetActive(false);
+        movement_->SetActive(true, true);
+
+        // avoid reset
+        vehicle_api_->setCarControls(msr::airlib::CarApiBase::CarControls());
+        updateMovement(msr::airlib::CarApiBase::CarControls());
+    }, true);
+}
+
+
+void CarPawnApi::reset()
+{
+    vehicle_api_->reset();
+    resetUnrealPhysicsOnly();
+}
+
+void CarPawnApi::update(float delta)
+{
+    vehicle_api_->updateCarState(getCarState());
+    vehicle_api_->update(delta);
+}
+
+CarPawnApi::~CarPawnApi() = default;
